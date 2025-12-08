@@ -1,24 +1,12 @@
-const { Log, User } = require('../../models');
+const express = require('express');
+const router = express.Router();
+const { listLogs } = require('../controllers/logController');
+const { authenticateJWT, authorizeRoles } = require('../middleware/authMiddleware');
+const ROLES = require('../constants/roles');
 
-async function listLogs(req, res) {
-  try {
-    const logs = await Log.findAll({
-      include: [
-        {
-          model: User,
-          as: 'user',
-          attributes: ['id', 'username', 'name'],
-        },
-      ],
-      order: [['createdAt', 'DESC']],
-      limit: 200, // adjust if you want more
-    });
+router.use(authenticateJWT);
+router.use(authorizeRoles(ROLES.ADMIN));
 
-    res.json(logs);
-  } catch (err) {
-    console.error('Log fetch error:', err);
-    res.status(500).json({ message: 'Error fetching logs' });
-  }
-}
+router.get('/', listLogs);
 
-module.exports = { listLogs };
+module.exports = router;

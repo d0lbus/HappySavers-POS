@@ -21,7 +21,7 @@ export default function LoginPage() {
     });
 
     if (success) {
-      navigate('/admin/users');
+        navigate('/dashboard');  
     }
   };
 

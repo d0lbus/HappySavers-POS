@@ -5,7 +5,7 @@ const { authenticateJWT, authorizeRoles } = require('../middleware/authMiddlewar
 const ROLES = require('../constants/roles');
 
 router.use(authenticateJWT);
-router.use(authorizeRoles(ROLES.ADMIN)); // everything below = admin-only
+router.use(authorizeRoles(ROLES.ADMIN));
 
 router.get('/', userController.listUsers);
 router.post('/', userController.createUser);

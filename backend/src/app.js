@@ -13,13 +13,13 @@ const logRoutes = require('./routes/logRoutes');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// middleware
 app.use(
   cors({
     origin: 'http://localhost:5173',
     credentials: true,
   })
 );
+
 app.use(express.json());
 app.use(cookieParser());
 
@@ -29,12 +29,10 @@ app.use('/users', userRoutes);
 app.use('/roles', roleRoutes);
 app.use('/logs', logRoutes);
 
-// simple health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-// start server
 app.listen(PORT, () => {
   console.log(`Backend API running on http://localhost:${PORT}`);
 });
