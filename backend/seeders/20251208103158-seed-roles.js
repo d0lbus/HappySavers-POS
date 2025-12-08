@@ -1,32 +1,51 @@
 'use strict';
 
 module.exports = {
-  async up(queryInterface) {
-    const now = new Date();
+  async up(queryInterface, Sequelize) {
+    // 1) Read existing roles
+    const [existing] = await queryInterface.sequelize.query(
+      'SELECT name FROM roles;'
+    );
+    const existingNames = existing.map((r) => r.name);
 
-    await queryInterface.bulkInsert('roles', [
-      {
+    const now = new Date();
+    const rolesToInsert = [];
+
+    if (!existingNames.includes('Admin')) {
+      rolesToInsert.push({
         name: 'Admin',
-        description: 'Full system access',
+        description: 'System administrator',
         createdAt: now,
         updatedAt: now,
-      },
-      {
+      });
+    }
+
+    if (!existingNames.includes('Cashier')) {
+      rolesToInsert.push({
         name: 'Cashier',
-        description: 'Can process sales and view limited data',
+        description: 'POS cashier',
         createdAt: now,
         updatedAt: now,
-      },
-      {
+      });
+    }
+
+    if (!existingNames.includes('Manager')) {
+      rolesToInsert.push({
         name: 'Manager',
-        description: 'Can view reports and manage inventory',
+        description: 'Store manager',
         createdAt: now,
         updatedAt: now,
-      },
-    ]);
+      });
+    }
+
+    if (rolesToInsert.length > 0) {
+      await queryInterface.bulkInsert('roles', rolesToInsert);
+    }
   },
 
-  async down(queryInterface) {
-    await queryInterface.bulkDelete('roles', null, {});
+  async down(queryInterface, Sequelize) {
+    await queryInterface.bulkDelete('roles', {
+      name: ['Admin', 'Cashier', 'Manager'],
+    });
   },
 };
