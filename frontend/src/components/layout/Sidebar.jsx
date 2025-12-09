@@ -1,13 +1,12 @@
 // src/components/layout/Sidebar.jsx
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
-// Import commonly used icon sets
+// React Icons
 import {
   FiHome,
   FiUsers,
   FiUserPlus,
-  FiUserCheck,
   FiSettings,
   FiArchive,
   FiBox,
@@ -27,49 +26,58 @@ import {
   FiClipboard,
   FiFolder,
   FiPieChart,
+  FiClock,
+  FiTrash,
 } from "react-icons/fi";
-
-import { FiTrash, FiClock } from "react-icons/fi";
-
-
 import { HiOutlineReceiptRefund } from "react-icons/hi2";
 import { MdOutlinePointOfSale } from "react-icons/md";
 
-// =======================================================
-// ICON MAP — connects navConfig.js => actual React Icons
-// =======================================================
+// ----------------------------------------------------
+// ICON MAP — store COMPONENTS, not JSX elements
+// ----------------------------------------------------
 const ICONS = {
-  dashboard: <FiHome className="w-5 h-5" />,
-  users: <FiUsers className="w-5 h-5" />,
-  add: <FiUserPlus className="w-5 h-5" />,
-  audit: <FiActivity className="w-5 h-5" />,
-  products: <FiBox className="w-5 h-5" />,
-  promo: <FiTag className="w-5 h-5" />,
-  inventory: <FiArchive className="w-5 h-5" />,
-  adjust: <FiRepeat className="w-5 h-5" />,
-  movement: <FiRefreshCw className="w-5 h-5" />,
-  lowstock: <FiAlertTriangle className="w-5 h-5" />,
-  transactions: <FiList className="w-5 h-5" />,
-  report: <FiBarChart2 className="w-5 h-5" />,
-  refund: <HiOutlineReceiptRefund className="w-5 h-5" />,
-  void: <FiTrash className="w-5 h-5" />,
-  shift: <FiClock className="w-5 h-5" />,
-  roi: <FiPieChart className="w-5 h-5" />,
-  settings: <FiSettings className="w-5 h-5" />,
-  tax: <FiDollarSign className="w-5 h-5" />,
-  receipt: <FiFileText className="w-5 h-5" />,
-  payment: <FiDollarSign className="w-5 h-5" />,
-  pos: <MdOutlinePointOfSale className="w-5 h-5" />,
-  summary: <FiClipboard className="w-5 h-5" />,
-  default: <FiFolder className="w-5 h-5" />,
+  dashboard: FiHome,
+  users: FiUsers,
+  add: FiUserPlus,
+  audit: FiActivity,
+
+  products: FiBox,
+  promo: FiTag,
+
+  inventory: FiArchive,
+  adjust: FiRepeat,
+  movement: FiRefreshCw,
+  lowstock: FiAlertTriangle,
+
+  transactions: FiList,
+
+  report: FiBarChart2,
+
+  refund: HiOutlineReceiptRefund,
+  void: FiTrash,
+
+  shift: FiClock,
+
+  roi: FiPieChart,
+
+  settings: FiSettings,
+  tax: FiDollarSign,
+  receipt: FiFileText,
+  payment: FiDollarSign,
+
+  pos: MdOutlinePointOfSale,
+  summary: FiClipboard,
+
+  default: FiFolder,
 };
 
-// fallback icon
-function getIcon(iconName) {
-  return ICONS[iconName] || ICONS.default;
+function getIconComponent(name) {
+  return ICONS[name] || ICONS.default;
 }
 
 export default function Sidebar({ role, user, navItems, isOpen, onClose }) {
+  const location = useLocation();
+
   const initials = user?.username
     ?.split(" ")
     ?.map((n) => n[0])
@@ -121,28 +129,36 @@ export default function Sidebar({ role, user, navItems, isOpen, onClose }) {
               </p>
 
               <div className="flex flex-col gap-1">
-                {section.items.map((item) => (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    onClick={onClose}
-                    className={({ isActive }) =>
-                      `
+                {section.items.map((item) => {
+                  const Icon = getIconComponent(item.icon);
+
+                  // exact match so /admin/users does NOT also light up /admin/users/create
+                  const isActive = location.pathname === item.to;
+
+                  return (
+                    <NavLink
+                      key={item.to}
+                      to={item.to}
+                      onClick={onClose}
+                      className={`
                         flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all
                         ${
                           isActive
                             ? "bg-emerald-100 text-emerald-700 font-medium border border-emerald-200"
                             : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                         }
-                      `
-                    }
-                  >
-                    <span className="text-slate-600">
-                      {getIcon(item.icon)}
-                    </span>
-                    {item.label}
-                  </NavLink>
-                ))}
+                      `}
+                    >
+                      <Icon
+                        className={`
+                          w-5 h-5
+                          ${isActive ? "text-emerald-700" : "text-slate-500"}
+                        `}
+                      />
+                      <span>{item.label}</span>
+                    </NavLink>
+                  );
+                })}
               </div>
             </div>
           ))}
