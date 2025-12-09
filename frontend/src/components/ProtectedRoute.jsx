@@ -10,11 +10,12 @@ export default function ProtectedRoute({ children, roles }) {
 
   // roles = ['Admin'], ['Cashier'], etc.
   if (roles && roles.length > 0) {
-    const userRole = user.roleName; // from backend
-    if (!roles.includes(userRole)) {
-      return <Navigate to="/dashboard" replace />;
+  const userRole = user.roleName;
+  if (!roles.includes(userRole)) {
+    return <Navigate to="/not-authorized" replace />;
     }
   }
+
 
   return children;
 }

@@ -5,8 +5,6 @@ import { useAuthStore } from '../../store/authStore';
 export default function LoginPage() {
   const navigate = useNavigate();
   const { login, loading, error, user } = useAuthStore();
-
-
   const [username, setUsername] = useState('');
   const [usePin, setUsePin] = useState(true);
   const [password, setPassword] = useState('');
@@ -30,20 +28,25 @@ export default function LoginPage() {
       pin: usePin ? pin : undefined,
     });
 
-    if (success) {
-      if (user?.roleName === 'Admin') {
-        navigate('/admin');
-      } else if (user?.roleName === 'Manager') {
-        navigate('/manager');
-      } else if (user?.roleName === 'Cashier') {
-        navigate('/cashier');
-      } else {
-        navigate('/login'); // fallback if something is weird
-      }
-    } else {
+    if (!success) {
       setLocalError('Wrong username, password, or PIN.');
+      return;
     }
-  }
+
+    // 🔥 get the fresh user from the store
+    const freshUser = useAuthStore.getState().user;
+
+    if (freshUser?.roleName === 'Admin') {
+      navigate('/admin');
+    } else if (freshUser?.roleName === 'Manager') {
+      navigate('/manager');
+    } else if (freshUser?.roleName === 'Cashier') {
+      navigate('/cashier');
+    } else {
+      navigate('/login');
+    }
+  };
+
 
   const handlePinKeyPress = (value) => {
     setLocalError(null);
