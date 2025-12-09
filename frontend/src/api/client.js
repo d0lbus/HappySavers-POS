@@ -1,11 +1,22 @@
+// frontend/src/api/client.js
 import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
 
+const API_BASE_URL = 'http://localhost:3000';
+
+// Main axios instance used by the app
 const api = axios.create({
-  baseURL: 'http://localhost:3000', // backend URL
-  withCredentials: true, // send refreshToken cookie
+  baseURL: API_BASE_URL,
+  withCredentials: true,
 });
 
+// Separate instance for refresh so it is NOT intercepted
+const refreshApi = axios.create({
+  baseURL: API_BASE_URL,
+  withCredentials: true,
+});
+
+// Attach access token on every request
 api.interceptors.request.use((config) => {
   const token = useAuthStore.getState().accessToken;
   if (token) {
@@ -33,19 +44,34 @@ api.interceptors.response.use(
   async (error) => {
     const originalConfig = error.config;
 
+    // If no response (network error, CORS, etc.), just reject
+    if (!error.response) {
+      return Promise.reject(error);
+    }
+
+    const status = error.response.status;
+
+    // Do NOT try refresh for login/refresh endpoints
+    const isAuthLogin = originalConfig?.url === '/auth/login';
+    const isAuthRefresh = originalConfig?.url === '/auth/refresh';
+
     if (
-      error.response &&
-      error.response.status === 401 &&
-      !originalConfig._retry
+      status === 401 &&
+      !originalConfig._retry &&
+      !isAuthLogin &&
+      !isAuthRefresh
     ) {
       originalConfig._retry = true;
       const authStore = useAuthStore.getState();
 
       if (isRefreshing) {
+        // Queue other requests while refresh is in progress
         return new Promise((resolve, reject) => {
           pendingRequests.push({
             resolve: (token) => {
-              originalConfig.headers.Authorization = `Bearer ${token}`;
+              if (token) {
+                originalConfig.headers.Authorization = `Bearer ${token}`;
+              }
               resolve(api(originalConfig));
             },
             reject,
@@ -54,8 +80,10 @@ api.interceptors.response.use(
       }
 
       isRefreshing = true;
+
       try {
-        const res = await api.post('/auth/refresh');
+        // Use refreshApi so this call is NOT re-intercepted
+        const res = await refreshApi.post('/auth/refresh');
         const newToken = res.data.accessToken;
 
         authStore.setAccessToken(newToken);
@@ -72,6 +100,7 @@ api.interceptors.response.use(
       }
     }
 
+    // For login/refresh 401s and all other errors, just reject
     return Promise.reject(error);
   }
 );

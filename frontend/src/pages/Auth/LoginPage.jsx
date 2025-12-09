@@ -7,12 +7,36 @@ export default function LoginPage() {
   const { login, loading, error } = useAuthStore();
 
   const [username, setUsername] = useState('');
-  const [usePin, setUsePin] = useState(false);
+  const [usePin, setUsePin] = useState(true);
   const [password, setPassword] = useState('');
   const [pin, setPin] = useState('');
 
+  const [localError, setLocalError] = useState(null);
+
+  const showError = localError || error;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // username validation
+    if (!username.trim()) {
+      setLocalError('Username is required.');
+      return;
+    }
+
+    // pin validation
+    if (usePin && pin.length !== 4) {
+      setLocalError('Enter a 4-digit PIN.');
+      return;
+    }
+
+    // password validation
+    if (!usePin && !password.trim()) {
+      setLocalError('Password is required.');
+      return;
+    }
+
+    setLocalError(null);
 
     const success = await login({
       username,
@@ -21,91 +45,201 @@ export default function LoginPage() {
     });
 
     if (success) {
-        navigate('/dashboard');  
+      navigate('/dashboard');
+    } else {
+      setLocalError('Wrong username, password, or PIN.');
     }
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-100">
-      <div className="w-full max-w-md bg-white shadow-md rounded-lg p-6">
-        <h1 className="text-2xl font-semibold mb-4 text-center">
-          HappySavers POS – Login
-        </h1>
+  const handlePinKeyPress = (value) => {
+    setLocalError(null);
 
-        {error && (
-          <div className="mb-3 text-red-600 text-sm">
-            {error}
+    if (value === 'backspace') {
+      setPin((prev) => prev.slice(0, -1));
+      return;
+    }
+
+    if (value === 'clear') {
+      setPin('');
+      return;
+    }
+
+    if (pin.length >= 4) return;
+
+    setPin(pin + value);
+  };
+
+  const isSubmitDisabled = () => {
+    if (loading) return true;
+    if (!username.trim()) return true;
+    if (usePin) return pin.length !== 4;
+    return password.length === 0;
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-sky-50 to-slate-100 px-4">
+      <div className="w-full max-w-md bg-white shadow-lg rounded-2xl px-8 py-10 border border-slate-100">
+        
+        {/* Title */}
+        <div className="mb-6 text-center">
+          <h1 className="text-3xl font-extrabold tracking-wide text-slate-900">
+            HappySavers <span className="text-sky-600">Minimart</span>
+          </h1>
+        </div>
+
+        {/* Error */}
+        {showError && (
+          <div className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+            {showError}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
+
+          {/* Username */}
           <div>
-            <label className="block text-sm mb-1">Username</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              Username
+            </label>
             <input
               type="text"
-              className="w-full border rounded px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-base outline-none focus:ring-2 focus:ring-sky-100 focus:border-sky-600"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
+              onChange={(e) => {
+                setUsername(e.target.value);
+                setLocalError(null);
+              }}
             />
           </div>
 
-          <div className="flex items-center justify-between text-sm">
-            <span>Login using:</span>
-            <div className="space-x-3">
-              <label className="inline-flex items-center">
-                <input
-                  type="radio"
-                  checked={!usePin}
-                  onChange={() => setUsePin(false)}
-                />
-                <span className="ml-1">Password</span>
-              </label>
-              <label className="inline-flex items-center">
-                <input
-                  type="radio"
-                  checked={usePin}
-                  onChange={() => setUsePin(true)}
-                />
-                <span className="ml-1">PIN</span>
-              </label>
+          {/* Mode toggle */}
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-xs font-medium text-slate-500">
+              Login using
+            </span>
+
+            <div className="inline-flex rounded-full bg-slate-100 p-1 text-sm font-medium">
+              <button
+                type="button"
+                onClick={() => {
+                  setUsePin(true);
+                  setLocalError(null);
+                  setPassword('');
+                }}
+                className={`px-4 py-1.5 rounded-full transition ${
+                  usePin ? 'bg-sky-600 text-white shadow-sm' : 'text-slate-700'
+                }`}
+              >
+                PIN
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setUsePin(false);
+                  setLocalError(null);
+                  setPin('');
+                }}
+                className={`px-4 py-1.5 rounded-full transition ${
+                  !usePin ? 'bg-sky-600 text-white shadow-sm' : 'text-slate-700'
+                }`}
+              >
+                Password
+              </button>
             </div>
           </div>
 
+          {/* PIN Mode */}
+          {usePin && (
+            <div className="space-y-3">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  PIN
+                </label>
+
+                <input
+                  type="password"
+                  inputMode="numeric"
+                  maxLength={4}
+                  className="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-2xl tracking-[0.4em] text-center outline-none focus:ring-2 focus:ring-sky-100 focus:border-sky-600"
+                  value={pin}
+                  onChange={(e) => {
+                    setPin(e.target.value.replace(/\D/g, '').slice(0, 4));
+                    setLocalError(null);
+                  }}
+                />
+
+                <p className="text-xs text-slate-400 mt-1 text-right">
+                  4-digit PIN
+                </p>
+              </div>
+
+              {/* Keypad */}
+              <div className="grid grid-cols-3 gap-3">
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
+                  <button
+                    key={n}
+                    type="button"
+                    className="py-3.5 text-lg font-semibold rounded-lg border border-slate-200 bg-slate-50 hover:bg-sky-50 transition"
+                    onClick={() => handlePinKeyPress(String(n))}
+                  >
+                    {n}
+                  </button>
+                ))}
+
+                <button
+                  type="button"
+                  className="py-3.5 rounded-lg text-sm font-medium border border-slate-200 bg-slate-50 hover:bg-red-50 transition"
+                  onClick={() => handlePinKeyPress('clear')}
+                >
+                  Clear
+                </button>
+
+                <button
+                  type="button"
+                  className="py-3.5 text-lg font-semibold rounded-lg border border-slate-200 bg-slate-50 hover:bg-sky-50 transition"
+                  onClick={() => handlePinKeyPress('0')}
+                >
+                  0
+                </button>
+
+                <button
+                  type="button"
+                  className="py-3.5 rounded-lg text-sm font-medium border border-slate-200 bg-slate-50 hover:bg-yellow-50 transition"
+                  onClick={() => handlePinKeyPress('backspace')}
+                >
+                  ⌫
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Password Mode */}
           {!usePin && (
             <div>
-              <label className="block text-sm mb-1">Password</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                Password
+              </label>
+
               <input
                 type="password"
-                className="w-full border rounded px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-base outline-none focus:ring-2 focus:ring-sky-100 focus:border-sky-600"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setLocalError(null);
+                }}
               />
             </div>
           )}
 
-          {usePin && (
-            <div>
-              <label className="block text-sm mb-1">PIN</label>
-              <input
-                type="password"
-                className="w-full border rounded px-3 py-2 text-sm"
-                value={pin}
-                onChange={(e) => setPin(e.target.value)}
-                minLength={4}
-                maxLength={6}
-                required
-              />
-            </div>
-          )}
-
+          {/* Submit */}
           <button
             type="submit"
-            disabled={loading}
-            className="w-full bg-slate-800 text-white py-2 rounded text-sm font-medium hover:bg-slate-900 disabled:opacity-60"
+            disabled={isSubmitDisabled()}
+            className="w-full mt-2 rounded-lg bg-sky-600 text-white py-3 font-semibold shadow hover:bg-sky-700 disabled:opacity-60 transition"
           >
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? 'Logging in…' : 'Login'}
           </button>
         </form>
       </div>
