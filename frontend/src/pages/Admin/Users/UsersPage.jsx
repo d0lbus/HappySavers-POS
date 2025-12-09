@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import api from '../../api/client';
-import { useAuthStore } from '../../store/authStore';
-import UserForm from '../../components/UserForm';
+import api from '../../../api/client';
+import { useAuthStore } from '../../../store/authStore';
+import UserForm from '../../../components/UserForm';
 
 async function fetchUsers() {
   const res = await api.get('/users');

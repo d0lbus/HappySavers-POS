@@ -118,6 +118,14 @@ export default function AdminDashboard() {
             onClick={() => navigate('/admin/products')}
           />
           <ModuleCard
+            title="Promotions"
+            description="Configure discounts, promos, and special pricing rules."
+            actionLabel="Manage Promotions"
+            icon={BanknotesIcon}
+            pill="Promos"
+            onClick={() => navigate('/admin/promotions')}
+          />
+          <ModuleCard
             title="Inventory"
             description="Review stock levels, adjustments, and low-stock items."
             actionLabel="Inventory Center"
@@ -134,6 +142,14 @@ export default function AdminDashboard() {
             onClick={() => navigate('/admin/reports')}
           />
           <ModuleCard
+            title="ROI & Profitability"
+            description="Analyze product, category, and promotion profitability."
+            actionLabel="Open ROI Dashboard"
+            icon={ChartBarSquareIcon}
+            pill="ROI"
+            onClick={() => navigate('/admin/roi')}
+          />
+          <ModuleCard
             title="System Settings"
             description="Configure store profile, tax rates, receipt footer, and POS rules."
             actionLabel="Open Settings"
@@ -141,8 +157,6 @@ export default function AdminDashboard() {
             pill="Setup"
             onClick={() => navigate('/admin/settings')}
           />
-
-          {/* NEW: Refunds & Voids */}
           <ModuleCard
             title="Refunds & Voids"
             description="Review and manage refunds, voided sales, and approval history."
@@ -151,8 +165,6 @@ export default function AdminDashboard() {
             pill="Refunds"
             onClick={() => navigate('/admin/refunds')}
           />
-
-          {/* NEW: Shift & Cash Management */}
           <ModuleCard
             title="Shift & Cash Management"
             description="Monitor shifts, cash drawer openings, closings, and variances."
@@ -161,8 +173,6 @@ export default function AdminDashboard() {
             pill="Shifts"
             onClick={() => navigate('/admin/shifts')}
           />
-
-          {/* NEW: Sales / Transaction History */}
           <ModuleCard
             title="Transaction History"
             description="Search and review individual transactions, reprint receipts, and inspect details."
@@ -351,15 +361,11 @@ function ModuleCard({ title, description, actionLabel, icon: Icon, pill, onClick
 }
 
 function ActivityItem({ time, text, variant = 'normal' }) {
-  const dotColor =
-    variant === 'warning' ? 'bg-amber-400' : 'bg-sky-500';
+  const dotColor = variant === 'warning' ? 'bg-amber-400' : 'bg-sky-500';
 
   return (
     <div className="flex items-start gap-3 text-xs text-slate-700">
-      {/* dot */}
       <span className={`mt-1 h-2 w-2 rounded-full ${dotColor}`} />
-
-      {/* time + message */}
       <div className="flex flex-col sm:flex-row sm:items-baseline gap-0.5 sm:gap-2">
         <span className="font-semibold text-slate-500">{time}</span>
         <span>{text}</span>
