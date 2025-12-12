@@ -16,6 +16,7 @@ import KpiCard from "../../components/dashboard/KpiCard";
 import ModuleCard from "../../components/dashboard/ModuleCard";
 import ActivityFeed from "../../components/dashboard/ActivityFeed";
 import SystemStatusCard from "../../components/dashboard/SystemStatusCard";
+import Button from "../../components/common/Button";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -183,45 +184,30 @@ export default function AdminDashboard() {
 
       {/* Quick actions */}
       <section>
-        <h2 className="text-lg font-semibold mb-3">Quick Actions</h2>
-        <div className="flex flex-wrap gap-3">
-          <button
-            type="button"
-            onClick={() => navigate("/cashier/pos")}
-            className="text-xs px-3.5 py-2 rounded-full bg-sky-600 text-white font-medium shadow hover:bg-sky-700 active:scale-[0.98] transition"
-          >
-            Open POS Terminal
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate("/admin/users/create")}
-            className="text-xs px-3.5 py-2 rounded-full bg-sky-600 text-white font-medium shadow hover:bg-sky-700 active:scale-[0.98] transition"
-          >
-            + New User
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate("/admin/products/create")}
-            className="text-xs px-3.5 py-2 rounded-full bg-sky-600 text-white font-medium shadow hover:bg-sky-700 active:scale-[0.98] transition"
-          >
-            + New Product
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate("/admin/reports/sales")}
-            className="text-xs px-3.5 py-2 rounded-full bg-sky-600 text-white font-medium shadow hover:bg-sky-700 active:scale-[0.98] transition"
-          >
-            View Sales Reports
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate("/admin/settings")}
-            className="text-xs px-3.5 py-2 rounded-full bg-sky-600 text-white font-medium shadow hover:bg-sky-700 active:scale-[0.98] transition"
-          >
-            Store Settings
-          </button>
-        </div>
-      </section>
+  <h2 className="text-lg font-semibold mb-3">Quick Actions</h2>
+
+  <div className="flex flex-wrap gap-3">
+    <Button size="sm" onClick={() => navigate("/cashier/pos")}>
+      Open POS Terminal
+    </Button>
+
+    <Button size="sm" onClick={() => navigate("/admin/users/create")}>
+      + New User
+    </Button>
+
+    <Button size="sm" onClick={() => navigate("/admin/products/create")}>
+      + New Product
+    </Button>
+
+    <Button size="sm" onClick={() => navigate("/admin/reports/sales")}>
+      View Sales Reports
+    </Button>
+
+    <Button size="sm" variant="outline" onClick={() => navigate("/admin/settings")}>
+      Store Settings
+    </Button>
+  </div>
+</section>
 
       {/* Admin Modules */}
       <section>
