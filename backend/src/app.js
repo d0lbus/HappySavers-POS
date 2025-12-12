@@ -1,21 +1,26 @@
 // backend/src/app.js
-require('dotenv').config();
+require("dotenv").config();
 
-const express = require('express');
-const cors = require('cors');
-const cookieParser = require('cookie-parser');
+const path = require("path");
+const express = require("express");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
-const authRoutes = require('./routes/authRoutes');
-const userRoutes = require('./routes/userRoutes');
-const roleRoutes = require('./routes/roleRoutes');
-const logRoutes = require('./routes/logRoutes');
+const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
+const roleRoutes = require("./routes/roleRoutes");
+const logRoutes = require("./routes/logRoutes");
+
+const productsRoutes = require("./routes/productsRoutes");
+const categoriesRoutes = require("./routes/categoriesRoutes");
+const uploadsRoutes = require("./routes/uploadRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
@@ -23,14 +28,22 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-// routes
-app.use('/auth', authRoutes);
-app.use('/users', userRoutes);
-app.use('/roles', roleRoutes);
-app.use('/logs', logRoutes);
+// core routes
+app.use("/auth", authRoutes);
+app.use("/users", userRoutes);
+app.use("/roles", roleRoutes);
+app.use("/logs", logRoutes);
 
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok' });
+// product system routes
+app.use("/products", productsRoutes);
+app.use("/categories", categoriesRoutes);
+app.use("/uploads", uploadsRoutes);
+
+// static uploads
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
+app.get("/health", (req, res) => {
+  res.json({ status: "ok" });
 });
 
 app.listen(PORT, () => {

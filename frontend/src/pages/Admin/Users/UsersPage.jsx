@@ -172,7 +172,7 @@ export default function UsersPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold text-slate-800">User Management</h1>
+        <h1 className="text-xl font-semibold text-slate-900">User Management</h1>
 
         <Button type="button" variant="primary" onClick={openCreate}>
           + New User
