@@ -31,8 +31,6 @@ import POSPage from "./pages/Shared/POSPage";
 
 // Admin – Users
 import UsersPage from "./pages/Admin/Users/UsersPage";
-import UserCreatePage from "./pages/Admin/Users/UserCreatePage";
-import UserEditPage from "./pages/Admin/Users/UserEditPage";
 
 // Admin – Audit
 import AuditLogPage from "./pages/Admin/Audit/AuditLogPage";
@@ -141,8 +139,6 @@ function App() {
 
           {/* Users */}
           <Route path="users" element={<UsersPage />} />
-          <Route path="users/create" element={<UserCreatePage />} />
-          <Route path="users/:id" element={<UserEditPage />} />
 
           {/* Audit */}
           <Route path="audit" element={<AuditLogPage />} />

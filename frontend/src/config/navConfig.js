@@ -20,7 +20,6 @@ export const navConfig = {
       section: "Users",
       items: [
         { label: "All Users", to: "/admin/users", icon: "users" },
-        { label: "Create User", to: "/admin/users/create", icon: "add" },
         { label: "Audit Logs", to: "/admin/audit", icon: "audit" },
       ],
     },
