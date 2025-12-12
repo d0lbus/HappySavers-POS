@@ -95,6 +95,7 @@ export default function ProductsPage() {
       }),
       ch.accessor("selling_price", {
         header: () => <div className="text-right">Price</div>,
+        meta: { align: "right" },
         cell: (info) => (
           <div className="text-right">₱{Number(info.getValue()).toFixed(2)}</div>
         ),
@@ -132,6 +133,7 @@ export default function ProductsPage() {
       ch.display({
         id: "actions",
         header: () => <div className="text-right">Actions</div>,
+        meta: { align: "right" },
         cell: (info) => {
           const p = info.row.original;
 

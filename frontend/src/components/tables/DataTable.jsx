@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -6,10 +6,29 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from '@tanstack/react-table';
+} from "@tanstack/react-table";
 
-import TableToolbar from './TableToolbar';
-import Pagination from './Pagination';
+import TableToolbar from "./TableToolbar";
+import Pagination from "./Pagination";
+
+function alignToThClass(align) {
+  if (align === "right") return "text-right";
+  if (align === "center") return "text-center";
+  return "text-left";
+}
+
+function alignToTdClass(align) {
+  if (align === "right") return "text-right";
+  if (align === "center") return "text-center";
+  return "text-left";
+}
+
+function alignToButtonClass(align) {
+  // Button should take full width of the column
+  if (align === "right") return "w-full flex items-center justify-end gap-2";
+  if (align === "center") return "w-full flex items-center justify-center gap-2";
+  return "w-full flex items-center justify-start gap-2";
+}
 
 export default function DataTable({
   columns,
@@ -21,7 +40,7 @@ export default function DataTable({
   initialState,
   onRowClick,
   rowClassName,
-  emptyText = 'No results found.',
+  emptyText = "No results found.",
   toolbar,
 }) {
   const [sorting, setSorting] = React.useState(initialState?.sorting ?? []);
@@ -29,7 +48,7 @@ export default function DataTable({
     initialState?.columnFilters ?? []
   );
   const [globalFilter, setGlobalFilter] = React.useState(
-    initialState?.globalFilter ?? ''
+    initialState?.globalFilter ?? ""
   );
   const [columnVisibility, setColumnVisibility] = React.useState(
     initialState?.columnVisibility ?? {}
@@ -38,12 +57,7 @@ export default function DataTable({
   const table = useReactTable({
     data: Array.isArray(data) ? data : [],
     columns: Array.isArray(columns) ? columns : [],
-    state: {
-      sorting,
-      columnFilters,
-      globalFilter,
-      columnVisibility,
-    },
+    state: { sorting, columnFilters, globalFilter, columnVisibility },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
@@ -52,7 +66,7 @@ export default function DataTable({
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    globalFilterFn: 'includesString',
+    globalFilterFn: "includesString",
   });
 
   return (
@@ -60,14 +74,12 @@ export default function DataTable({
       {(title || subtitle) && (
         <div className="flex items-start justify-between gap-3">
           <div>
-            {title && (
-              <h2 className="text-lg font-semibold text-slate-900">
-                {title}
-              </h2>
-            )}
-            {subtitle && (
+            {title ? (
+              <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
+            ) : null}
+            {subtitle ? (
               <p className="text-sm text-slate-600">{subtitle}</p>
-            )}
+            ) : null}
           </div>
         </div>
       )}
@@ -78,7 +90,7 @@ export default function DataTable({
         </div>
 
         <div className="w-full overflow-x-auto">
-          <table className="min-w-full">
+          <table className="min-w-full table-auto">
             <thead className="bg-slate-50">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id} className="border-b border-slate-200">
@@ -86,10 +98,16 @@ export default function DataTable({
                     const canSort = header.column.getCanSort();
                     const sortDir = header.column.getIsSorted(); // 'asc' | 'desc' | false
 
+                    const align = header.column.columnDef?.meta?.align || "left";
+
                     return (
                       <th
                         key={header.id}
-                        className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600"
+                        style={{ width: header.getSize() }}
+                        className={[
+                          "px-4 py-3 align-middle text-xs font-semibold uppercase tracking-wide text-slate-600",
+                          alignToThClass(align),
+                        ].join(" ")}
                       >
                         {header.isPlaceholder ? null : (
                           <button
@@ -101,29 +119,29 @@ export default function DataTable({
                                 : undefined
                             }
                             className={[
-                              'inline-flex items-center gap-2',
+                              alignToButtonClass(align),
                               canSort
-                                ? 'cursor-pointer select-none hover:text-slate-900'
-                                : 'cursor-default',
-                            ].join(' ')}
-                            title={canSort ? 'Sort' : undefined}
+                                ? "cursor-pointer select-none hover:text-slate-900"
+                                : "cursor-default",
+                            ].join(" ")}
+                            title={canSort ? "Sort" : undefined}
                           >
-                            <span>
+                            <span className="inline-flex items-center">
                               {flexRender(
                                 header.column.columnDef.header,
                                 header.getContext()
                               )}
                             </span>
 
-                            {canSort && (
+                            {canSort ? (
                               <span className="text-[10px] text-slate-400">
-                                {sortDir === 'asc'
-                                  ? '▲'
-                                  : sortDir === 'desc'
-                                  ? '▼'
-                                  : '↕'}
+                                {sortDir === "asc"
+                                  ? "▲"
+                                  : sortDir === "desc"
+                                  ? "▼"
+                                  : "↕"}
                               </span>
-                            )}
+                            ) : null}
                           </button>
                         )}
                       </th>
@@ -134,7 +152,7 @@ export default function DataTable({
             </thead>
 
             <tbody className="divide-y divide-slate-100">
-              {isLoading && (
+              {isLoading ? (
                 <tr>
                   <td
                     colSpan={table.getAllLeafColumns().length || 1}
@@ -143,9 +161,9 @@ export default function DataTable({
                     Loading…
                   </td>
                 </tr>
-              )}
+              ) : null}
 
-              {!isLoading && error && (
+              {!isLoading && error ? (
                 <tr>
                   <td
                     colSpan={table.getAllLeafColumns().length || 1}
@@ -154,9 +172,9 @@ export default function DataTable({
                     Failed to load data.
                   </td>
                 </tr>
-              )}
+              ) : null}
 
-              {!isLoading && !error && table.getRowModel().rows.length === 0 && (
+              {!isLoading && !error && table.getRowModel().rows.length === 0 ? (
                 <tr>
                   <td
                     colSpan={table.getAllLeafColumns().length || 1}
@@ -165,7 +183,7 @@ export default function DataTable({
                     {emptyText}
                   </td>
                 </tr>
-              )}
+              ) : null}
 
               {!isLoading &&
                 !error &&
@@ -174,22 +192,30 @@ export default function DataTable({
                     key={row.id}
                     onClick={onRowClick ? () => onRowClick(row.original) : undefined}
                     className={[
-                      'transition',
-                      onRowClick ? 'cursor-pointer hover:bg-slate-50' : '',
-                      rowClassName ? rowClassName(row.original) : '',
-                    ].join(' ')}
+                      "transition",
+                      onRowClick ? "cursor-pointer hover:bg-slate-50" : "",
+                      rowClassName ? rowClassName(row.original) : "",
+                    ].join(" ")}
                   >
-                    {row.getVisibleCells().map((cell) => (
-                      <td
-                        key={cell.id}
-                        className="px-4 py-3 text-sm text-slate-800"
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    ))}
+                    {row.getVisibleCells().map((cell) => {
+                      const align = cell.column.columnDef?.meta?.align || "left";
+
+                      return (
+                        <td
+                          key={cell.id}
+                          style={{ width: cell.column.getSize() }}
+                          className={[
+                            "px-4 py-3 align-middle text-sm text-slate-800",
+                            alignToTdClass(align),
+                          ].join(" ")}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      );
+                    })}
                   </tr>
                 ))}
             </tbody>

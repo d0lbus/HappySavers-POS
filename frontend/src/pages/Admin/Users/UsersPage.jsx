@@ -132,6 +132,7 @@ export default function UsersPage() {
       }),
       ch.display({
         id: "actions",
+        meta: { align: "right" },
         header: () => <div className="text-right">Actions</div>,
         cell: (info) => {
           const u = info.row.original;
