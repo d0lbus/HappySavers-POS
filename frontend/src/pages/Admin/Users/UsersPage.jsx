@@ -6,6 +6,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import api from "../../../api/client";
 
 import DataTable from "../../../components/tables/DataTable";
+import Button from "../../../components/common/Button";
 
 // Fetch all users
 async function fetchUsers() {
@@ -137,27 +138,29 @@ export default function UsersPage() {
 
           return (
             <div className="flex justify-end gap-2">
-              <button
+              <Button
                 type="button"
+                size="sm"
+                variant="outline"
                 onClick={(e) => {
                   e.stopPropagation();
                   openEdit(u);
                 }}
-                className="text-xs px-2 py-1 border rounded hover:bg-slate-50 dark:hover:bg-gray-900"
               >
                 Edit
-              </button>
+              </Button>
 
-              <button
+              <Button
                 type="button"
+                size="sm"
+                variant="outline"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleStatusChange(u);
                 }}
-                className="text-xs px-2 py-1 border rounded hover:bg-slate-50 dark:hover:bg-gray-900"
               >
                 {u.status === "active" ? "Deactivate" : "Activate"}
-              </button>
+              </Button>
             </div>
           );
         },
@@ -169,16 +172,11 @@ export default function UsersPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold text-slate-800 dark:text-gray-100">
-          User Management
-        </h1>
+        <h1 className="text-xl font-bold text-slate-800">User Management</h1>
 
-        <button
-          className="px-4 py-2 text-sm font-medium rounded-lg bg-emerald-600 text-white shadow hover:bg-emerald-700 transition"
-          onClick={openCreate}
-        >
+        <Button type="button" variant="primary" onClick={openCreate}>
           + New User
-        </button>
+        </Button>
       </div>
 
       {/* DataTable */}
@@ -196,13 +194,9 @@ export default function UsersPage() {
           showColumnToggle: true,
           showPageSize: true,
           rightSlot: (
-            <button
-              type="button"
-              onClick={refetch}
-              className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-200 dark:hover:bg-gray-900"
-            >
+            <Button type="button" variant="outline" onClick={refetch}>
               Refresh
-            </button>
+            </Button>
           ),
         }}
         onRowClick={(row) => openEdit(row)}
@@ -225,7 +219,7 @@ export default function UsersPage() {
 }
 
 /* -----------------------------------------------------------
-   FORM MODAL COMPONENT (Embedded)
+   FORM MODAL COMPONENT (Embedded) - LIGHT ONLY
 ----------------------------------------------------------- */
 
 function UserFormModal({
@@ -259,24 +253,27 @@ function UserFormModal({
     onSubmit(payload);
   };
 
-  const canUseRoleSelect = Array.isArray(roles) && roles.length > 0 && !rolesError;
+  const canUseRoleSelect =
+    Array.isArray(roles) && roles.length > 0 && !rolesError;
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[999] p-4">
-      <div className="bg-white w-full max-w-md rounded-xl shadow-lg p-6 dark:bg-gray-950 dark:border dark:border-gray-800">
+      <div className="bg-white w-full max-w-md rounded-xl shadow-lg p-6 border border-slate-200">
         <div className="flex items-start justify-between gap-3">
-          <h2 className="text-lg font-semibold mb-4 text-slate-900 dark:text-gray-100">
+          <h2 className="text-lg font-semibold mb-4 text-slate-900">
             {mode === "create" ? "Create New User" : "Edit User"}
           </h2>
 
-          <button
+          <Button
             type="button"
+            variant="outline"
+            size="sm"
             onClick={onClose}
-            className="text-sm px-2 py-1 rounded border border-slate-200 hover:bg-slate-50 dark:border-gray-800 dark:hover:bg-gray-900 dark:text-gray-200"
             aria-label="Close"
+            className="px-2"
           >
             ✕
-          </button>
+          </Button>
         </div>
 
         {/* FORM FIELDS */}
@@ -322,11 +319,7 @@ function UserFormModal({
                   label: r.name,
                 })),
               ]}
-              helper={
-                rolesLoading
-                  ? "Loading roles…"
-                  : ""
-              }
+              helper={rolesLoading ? "Loading roles…" : ""}
             />
           ) : (
             <InputField
@@ -340,19 +333,13 @@ function UserFormModal({
 
         {/* ACTION BUTTONS */}
         <div className="flex justify-end gap-2 mt-6">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 text-sm rounded-lg border border-slate-300 hover:bg-slate-100 dark:border-gray-800 dark:hover:bg-gray-900 dark:text-gray-200"
-          >
+          <Button type="button" variant="outline" onClick={onClose}>
             Cancel
-          </button>
+          </Button>
 
-          <button
-            onClick={handleSave}
-            className="px-4 py-2 text-sm rounded-lg bg-emerald-600 text-white hover:bg-emerald-700"
-          >
+          <Button type="button" variant="primary" onClick={handleSave}>
             Save
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -360,7 +347,7 @@ function UserFormModal({
 }
 
 /* -----------------------------------------------------------
-   REUSABLE INPUT COMPONENTS
+   REUSABLE INPUT COMPONENTS - LIGHT ONLY
 ----------------------------------------------------------- */
 
 function InputField({
@@ -373,13 +360,13 @@ function InputField({
 }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-slate-700 mb-1 dark:text-gray-200">
+      <label className="block text-sm font-medium text-slate-700 mb-1">
         {label}
       </label>
       <input
         type={type}
         maxLength={maxLength}
-        className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-emerald-200 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-100"
+        className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-emerald-200"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
@@ -391,12 +378,12 @@ function InputField({
 function SelectField({ label, value, onChange, options, helper }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-slate-700 mb-1 dark:text-gray-200">
+      <label className="block text-sm font-medium text-slate-700 mb-1">
         {label}
       </label>
 
       <select
-        className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-emerald-200 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-100"
+        className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-emerald-200"
         value={value}
         onChange={(e) => onChange(e.target.value)}
       >
@@ -408,7 +395,7 @@ function SelectField({ label, value, onChange, options, helper }) {
       </select>
 
       {helper ? (
-        <p className="mt-1 text-xs text-slate-500 dark:text-gray-400">{helper}</p>
+        <p className="mt-1 text-xs text-slate-500">{helper}</p>
       ) : null}
     </div>
   );

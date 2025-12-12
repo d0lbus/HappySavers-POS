@@ -2,14 +2,6 @@ import React from 'react';
 
 /**
  * TableToolbar (Reusable)
- *
- * Props:
- * - table: TanStack table instance (required)
- * - showSearch?: boolean (default true)
- * - searchPlaceholder?: string
- * - leftSlot?: ReactNode
- * - rightSlot?: ReactNode
- * - showColumnToggle?: boolean (default true)
  */
 export default function TableToolbar({
   table,
@@ -44,21 +36,19 @@ export default function TableToolbar({
         {leftSlot}
 
         {showSearch && (
-          <div className="relative">
-            <input
-              value={globalFilter}
-              onChange={(e) => table.setGlobalFilter(e.target.value)}
-              placeholder={searchPlaceholder}
-              className="w-72 max-w-[85vw] rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none ring-0 focus:border-gray-300 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-100 dark:focus:border-gray-700"
-            />
-          </div>
+          <input
+            value={globalFilter}
+            onChange={(e) => table.setGlobalFilter(e.target.value)}
+            placeholder={searchPlaceholder}
+            className="w-72 max-w-[85vw] rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 outline-none focus:border-slate-400"
+          />
         )}
 
         {hasAnyFilter && (
           <button
             type="button"
             onClick={clearAll}
-            className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-200 dark:hover:bg-gray-900"
+            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"
           >
             Clear
           </button>
@@ -70,12 +60,12 @@ export default function TableToolbar({
 
         {showColumnToggle && hideableColumns.length > 0 && (
           <details className="relative">
-            <summary className="list-none cursor-pointer rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-200 dark:hover:bg-gray-900">
+            <summary className="list-none cursor-pointer rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-100">
               Columns
             </summary>
 
-            <div className="absolute right-0 z-20 mt-2 w-56 rounded-xl border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-800 dark:bg-gray-950">
-              <div className="px-2 py-1 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+            <div className="absolute right-0 z-20 mt-2 w-56 rounded-xl border border-slate-300 bg-white p-2 shadow-lg">
+              <div className="px-2 py-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
                 Toggle
               </div>
 
@@ -83,7 +73,7 @@ export default function TableToolbar({
                 {hideableColumns.map((col) => (
                   <label
                     key={col.id}
-                    className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-800 hover:bg-gray-50 dark:text-gray-100 dark:hover:bg-gray-900"
+                    className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-2 text-sm text-slate-800 hover:bg-slate-100"
                   >
                     <input
                       type="checkbox"

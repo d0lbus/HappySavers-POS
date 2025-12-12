@@ -11,29 +11,6 @@ import {
 import TableToolbar from './TableToolbar';
 import Pagination from './Pagination';
 
-/**
- * DataTable (Reusable)
- *
- * Props:
- * - columns: TanStack column defs
- * - data: array
- * - isLoading?: boolean
- * - error?: any
- * - title?: string
- * - subtitle?: string
- * - initialState?: { sorting?, pagination?, columnVisibility?, globalFilter? }
- * - onRowClick?: (rowOriginal) => void
- * - rowClassName?: (rowOriginal) => string
- * - emptyText?: string
- * - toolbar?: {
- *     showSearch?: boolean
- *     searchPlaceholder?: string
- *     leftSlot?: ReactNode
- *     rightSlot?: ReactNode
- *     showColumnToggle?: boolean
- *     showPageSize?: boolean
- *   }
- */
 export default function DataTable({
   columns,
   data,
@@ -84,29 +61,27 @@ export default function DataTable({
         <div className="flex items-start justify-between gap-3">
           <div>
             {title && (
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              <h2 className="text-lg font-semibold text-slate-900">
                 {title}
               </h2>
             )}
             {subtitle && (
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                {subtitle}
-              </p>
+              <p className="text-sm text-slate-600">{subtitle}</p>
             )}
           </div>
         </div>
       )}
 
-      <div className="rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
-        <div className="border-b border-gray-200 px-4 py-3 dark:border-gray-800">
+      <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div className="border-b border-slate-200 px-4 py-3">
           <TableToolbar table={table} {...toolbar} />
         </div>
 
         <div className="w-full overflow-x-auto">
           <table className="min-w-full">
-            <thead className="bg-gray-50 dark:bg-gray-900">
+            <thead className="bg-slate-50">
               {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id} className="border-b dark:border-gray-800">
+                <tr key={headerGroup.id} className="border-b border-slate-200">
                   {headerGroup.headers.map((header) => {
                     const canSort = header.column.getCanSort();
                     const sortDir = header.column.getIsSorted(); // 'asc' | 'desc' | false
@@ -114,27 +89,39 @@ export default function DataTable({
                     return (
                       <th
                         key={header.id}
-                        className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300"
+                        className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600"
                       >
                         {header.isPlaceholder ? null : (
                           <button
                             type="button"
                             disabled={!canSort}
-                            onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
+                            onClick={
+                              canSort
+                                ? header.column.getToggleSortingHandler()
+                                : undefined
+                            }
                             className={[
                               'inline-flex items-center gap-2',
-                              canSort ? 'cursor-pointer select-none' : 'cursor-default',
-                              canSort ? 'hover:text-gray-900 dark:hover:text-gray-100' : '',
+                              canSort
+                                ? 'cursor-pointer select-none hover:text-slate-900'
+                                : 'cursor-default',
                             ].join(' ')}
                             title={canSort ? 'Sort' : undefined}
                           >
                             <span>
-                              {flexRender(header.column.columnDef.header, header.getContext())}
+                              {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
                             </span>
 
                             {canSort && (
-                              <span className="text-[10px] text-gray-400">
-                                {sortDir === 'asc' ? '▲' : sortDir === 'desc' ? '▼' : '↕'}
+                              <span className="text-[10px] text-slate-400">
+                                {sortDir === 'asc'
+                                  ? '▲'
+                                  : sortDir === 'desc'
+                                  ? '▼'
+                                  : '↕'}
                               </span>
                             )}
                           </button>
@@ -146,12 +133,12 @@ export default function DataTable({
               ))}
             </thead>
 
-            <tbody className="divide-y divide-gray-100 dark:divide-gray-900">
+            <tbody className="divide-y divide-slate-100">
               {isLoading && (
                 <tr>
                   <td
                     colSpan={table.getAllLeafColumns().length || 1}
-                    className="px-4 py-10 text-center text-sm text-gray-500 dark:text-gray-400"
+                    className="px-4 py-10 text-center text-sm text-slate-500"
                   >
                     Loading…
                   </td>
@@ -162,7 +149,7 @@ export default function DataTable({
                 <tr>
                   <td
                     colSpan={table.getAllLeafColumns().length || 1}
-                    className="px-4 py-10 text-center text-sm text-red-600 dark:text-red-400"
+                    className="px-4 py-10 text-center text-sm text-red-600"
                   >
                     Failed to load data.
                   </td>
@@ -173,7 +160,7 @@ export default function DataTable({
                 <tr>
                   <td
                     colSpan={table.getAllLeafColumns().length || 1}
-                    className="px-4 py-10 text-center text-sm text-gray-500 dark:text-gray-400"
+                    className="px-4 py-10 text-center text-sm text-slate-500"
                   >
                     {emptyText}
                   </td>
@@ -188,16 +175,19 @@ export default function DataTable({
                     onClick={onRowClick ? () => onRowClick(row.original) : undefined}
                     className={[
                       'transition',
-                      onRowClick ? 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900' : '',
+                      onRowClick ? 'cursor-pointer hover:bg-slate-50' : '',
                       rowClassName ? rowClassName(row.original) : '',
                     ].join(' ')}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <td
                         key={cell.id}
-                        className="px-4 py-3 text-sm text-gray-800 dark:text-gray-100"
+                        className="px-4 py-3 text-sm text-slate-800"
                       >
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
                       </td>
                     ))}
                   </tr>
@@ -206,7 +196,7 @@ export default function DataTable({
           </table>
         </div>
 
-        <div className="border-t border-gray-200 px-4 py-3 dark:border-gray-800">
+        <div className="border-t border-slate-200 px-4 py-3">
           <Pagination table={table} showPageSize={toolbar?.showPageSize ?? true} />
         </div>
       </div>

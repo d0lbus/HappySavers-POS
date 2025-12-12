@@ -2,11 +2,6 @@ import React from 'react';
 
 /**
  * Pagination (Reusable)
- *
- * Props:
- * - table: TanStack table instance (required)
- * - showPageSize?: boolean (default true)
- * - pageSizeOptions?: number[] (default [10, 20, 50, 100])
  */
 export default function Pagination({
   table,
@@ -24,7 +19,7 @@ export default function Pagination({
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <div className="text-sm text-gray-600 dark:text-gray-300">
+      <div className="text-sm text-slate-600">
         Page <span className="font-semibold">{pageIndex + 1}</span> of{' '}
         <span className="font-semibold">{Math.max(pageCount, 1)}</span>
       </div>
@@ -32,11 +27,11 @@ export default function Pagination({
       <div className="flex flex-wrap items-center gap-2 justify-end">
         {showPageSize && (
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 dark:text-gray-300">Rows</span>
+            <span className="text-sm text-slate-600">Rows</span>
             <select
               value={pageSize}
               onChange={(e) => table.setPageSize(Number(e.target.value))}
-              className="rounded-lg border border-gray-200 bg-white px-2 py-2 text-sm text-gray-900 outline-none dark:border-gray-800 dark:bg-gray-950 dark:text-gray-100"
+              className="rounded-lg border border-slate-300 bg-white px-2 py-2 text-sm text-slate-800 outline-none focus:border-slate-400"
             >
               {pageSizeOptions.map((sz) => (
                 <option key={sz} value={sz}>
@@ -51,7 +46,7 @@ export default function Pagination({
           type="button"
           onClick={() => table.setPageIndex(0)}
           disabled={!canPrev}
-          className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 disabled:opacity-50 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-200"
+          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 disabled:opacity-50 hover:bg-slate-100"
           title="First"
         >
           ⏮
@@ -61,7 +56,7 @@ export default function Pagination({
           type="button"
           onClick={() => table.previousPage()}
           disabled={!canPrev}
-          className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 disabled:opacity-50 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-200"
+          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 disabled:opacity-50 hover:bg-slate-100"
           title="Previous"
         >
           ◀
@@ -71,7 +66,7 @@ export default function Pagination({
           type="button"
           onClick={() => table.nextPage()}
           disabled={!canNext}
-          className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 disabled:opacity-50 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-200"
+          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 disabled:opacity-50 hover:bg-slate-100"
           title="Next"
         >
           ▶
@@ -81,14 +76,14 @@ export default function Pagination({
           type="button"
           onClick={() => table.setPageIndex(pageCount - 1)}
           disabled={!canNext}
-          className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 disabled:opacity-50 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-200"
+          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 disabled:opacity-50 hover:bg-slate-100"
           title="Last"
         >
           ⏭
         </button>
 
         <div className="ml-2 flex items-center gap-2">
-          <span className="text-sm text-gray-600 dark:text-gray-300">Go</span>
+          <span className="text-sm text-slate-600">Go</span>
           <input
             type="number"
             min={1}
@@ -96,10 +91,13 @@ export default function Pagination({
             value={pageIndex + 1}
             onChange={(e) => {
               const v = Number(e.target.value || 1);
-              const nextIndex = Math.min(Math.max(v - 1, 0), Math.max(pageCount - 1, 0));
+              const nextIndex = Math.min(
+                Math.max(v - 1, 0),
+                Math.max(pageCount - 1, 0)
+              );
               table.setPageIndex(nextIndex);
             }}
-            className="w-20 rounded-lg border border-gray-200 bg-white px-2 py-2 text-sm text-gray-900 outline-none dark:border-gray-800 dark:bg-gray-950 dark:text-gray-100"
+            className="w-20 rounded-lg border border-slate-300 bg-white px-2 py-2 text-sm text-slate-800 outline-none focus:border-slate-400"
           />
         </div>
       </div>
