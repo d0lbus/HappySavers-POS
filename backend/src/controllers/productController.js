@@ -13,6 +13,11 @@ function normalizeStatus(status) {
   return "active";
 }
 
+// ✅ works whether your model exposes deleted_at OR deletedAt
+function isArchivedRow(row) {
+  return Boolean(row?.deleted_at || row?.deletedAt);
+}
+
 async function listProducts(req, res) {
   const page = Math.max(1, Number(req.query.page || 1));
   const limit = Math.min(100, Math.max(1, Number(req.query.limit || 20)));
@@ -22,9 +27,8 @@ async function listProducts(req, res) {
   const status = normalizeStatus(req.query.status);
 
   const sortBy = String(req.query.sortBy || "name");
-  const sortDir = String(req.query.sortDir || "asc").toLowerCase() === "desc"
-    ? "DESC"
-    : "ASC";
+  const sortDir =
+    String(req.query.sortDir || "asc").toLowerCase() === "desc" ? "DESC" : "ASC";
 
   const where = {};
 
@@ -91,7 +95,8 @@ async function createProduct(req, res) {
 
   if (!name) return res.status(422).json({ message: "Name is required" });
   if (!sku) return res.status(422).json({ message: "SKU is required" });
-  if (!categoryId) return res.status(422).json({ message: "Category is required" });
+  if (!categoryId)
+    return res.status(422).json({ message: "Category is required" });
 
   const costPrice = toNumber(payload.costPrice ?? payload.cost_price);
   const sellingPrice = toNumber(payload.sellingPrice ?? payload.selling_price);
@@ -134,9 +139,7 @@ async function updateProduct(req, res) {
   if (!row) return res.status(404).json({ message: "Product not found" });
 
   const imageChanged =
-    payload.imageKey &&
-    payload.imageKey !== row.image_key &&
-    row.image_key;
+    payload.imageKey && payload.imageKey !== row.image_key && row.image_key;
 
   if (imageChanged) {
     try {
@@ -152,11 +155,13 @@ async function updateProduct(req, res) {
     barcode: payload.barcode === "" ? null : payload.barcode ?? row.barcode,
     category_id: payload.categoryId ?? row.category_id,
     cost_price: payload.costPrice ?? payload.cost_price ?? row.cost_price,
-    selling_price: payload.sellingPrice ?? payload.selling_price ?? row.selling_price,
+    selling_price:
+      payload.sellingPrice ?? payload.selling_price ?? row.selling_price,
     low_stock_threshold:
-      payload.lowStockThreshold ?? payload.low_stock_threshold ?? row.low_stock_threshold,
-    is_active:
-      payload.isActive !== undefined ? Boolean(payload.isActive) : row.is_active,
+      payload.lowStockThreshold ??
+      payload.low_stock_threshold ??
+      row.low_stock_threshold,
+    is_active: payload.isActive !== undefined ? Boolean(payload.isActive) : row.is_active,
     image_url: payload.imageUrl ?? row.image_url,
     image_key: payload.imageKey ?? row.image_key,
   });
@@ -175,8 +180,13 @@ async function toggleProductStatus(req, res) {
   const row = await db.Product.findByPk(id, { paranoid: false });
 
   if (!row) return res.status(404).json({ message: "Product not found" });
-  if (row.deleted_at)
-    return res.status(422).json({ message: "Archived products cannot be toggled" });
+
+  // ✅ FIX: use deleted_at awareness
+  if (isArchivedRow(row)) {
+    return res
+      .status(422)
+      .json({ message: "Archived products cannot be toggled" });
+  }
 
   await row.update({ is_active: !row.is_active });
 
@@ -191,11 +201,12 @@ async function toggleProductStatus(req, res) {
 
 async function archiveProduct(req, res) {
   const id = Number(req.params.id);
-  const row = await db.Product.findByPk(id);
 
+  // (paranoid default true is fine for archiving an active product)
+  const row = await db.Product.findByPk(id);
   if (!row) return res.status(404).json({ message: "Product not found" });
 
-  await row.destroy();
+  await row.destroy(); // soft delete
 
   await db.Log.create({
     userId: req.user.id,
@@ -211,10 +222,12 @@ async function restoreProduct(req, res) {
   const row = await db.Product.findByPk(id, { paranoid: false });
 
   if (!row) return res.status(404).json({ message: "Product not found" });
-  if (!row.deleted_at)
-    return res.status(422).json({ message: "Product is not archived" });
 
-  await row.restore();
+  if (!isArchivedRow(row)) {
+    return res.status(422).json({ message: "Product is not archived" });
+  }
+
+  await row.restore(); 
 
   await db.Log.create({
     userId: req.user.id,
@@ -222,7 +235,13 @@ async function restoreProduct(req, res) {
     details: `Restored product ID ${id}`,
   });
 
-  res.json({ data: row });
+  // optional: reload to ensure deleted_at is cleared in returned data
+  const fresh = await db.Product.findByPk(id, {
+    paranoid: false,
+    include: [{ model: db.Category }],
+  });
+
+  res.json({ data: fresh || row });
 }
 
 module.exports = {

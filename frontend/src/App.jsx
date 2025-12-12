@@ -146,7 +146,7 @@ function App() {
           {/* Products */}
           <Route path="products" element={<ProductsPage />} />
           <Route path="products/create" element={<ProductCreatePage />} />
-          <Route path="products/:id" element={<ProductEditPage />} />
+          <Route path="products/:id/edit" element={<ProductEditPage />} />
           <Route path="products/promotions" element={<PromotionsPage />} />
 
           {/* Inventory */}
