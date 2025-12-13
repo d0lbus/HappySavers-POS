@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       tableName: 'promotions',
-      underscored: true,
+      underscored: false,
     }
   );
 

@@ -15,13 +15,16 @@ function promoIncludes() {
 module.exports = {
   async list(req, res, next) {
     try {
-      const promos = await Promotion.findAll({
-        order: [['createdAt', 'DESC']],
-        include: promoIncludes(),
-      });
-      res.json(promos);
-    } catch (err) {
-      next(err);
+    const promos = await Promotion.findAll(/* ... */);
+    return res.json(promos);
+  } catch (err) {
+    console.log("PROMOTIONS LIST ERROR MESSAGE:", err.message);
+    console.log("PROMOTIONS LIST ERROR ORIGINAL:", err.original);
+    console.log("PROMOTIONS LIST ERROR SQL:", err.sql);
+    return res.status(500).json({
+      message: err.message,
+      original: err.original?.message || err.original || null,
+    });
     }
   },
 
