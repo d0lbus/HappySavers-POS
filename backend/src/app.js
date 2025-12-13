@@ -14,6 +14,7 @@ const logRoutes = require("./routes/logRoutes");
 const productsRoutes = require("./routes/productsRoutes");
 const categoriesRoutes = require("./routes/categoriesRoutes");
 const uploadsRoutes = require("./routes/uploadRoutes");
+const promotionsRoutes = require("./routes/promotionRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -37,6 +38,7 @@ app.use("/logs", logRoutes);
 // product system routes
 app.use("/products", productsRoutes);
 app.use("/categories", categoriesRoutes);
+app.use("/promotions", promotionsRoutes);
 app.use("/uploads", uploadsRoutes);
 
 // static uploads

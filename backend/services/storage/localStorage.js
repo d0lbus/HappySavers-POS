@@ -1,12 +1,12 @@
-import fs from "fs";
-import path from "path";
-import { v4 as uuid } from "uuid";
+const fs = require("fs");
+const path = require("path");
+const { v4: uuid } = require("uuid");
 
 function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true });
 }
 
-export async function localUpload({ file, folder }) {
+async function localUpload({ file, folder }) {
   const uploadDir = process.env.UPLOAD_DIR || "uploads";
   const baseUrl = process.env.UPLOAD_PUBLIC_BASE_URL || "http://localhost:3000";
 
@@ -22,14 +22,21 @@ export async function localUpload({ file, folder }) {
   fs.writeFileSync(absPath, file.buffer);
 
   const key = `${safeFolder}/${fileName}`;
-  const url = `${baseUrl}/${uploadDir}/${key}`.replace(/\/+/g, "/").replace(":/", "://");
+  const url = `${baseUrl}/${uploadDir}/${key}`
+    .replace(/\/+/g, "/")
+    .replace(":/", "://");
 
   return { key, url };
 }
 
-export async function localDelete({ key }) {
+async function localDelete({ key }) {
   const uploadDir = process.env.UPLOAD_DIR || "uploads";
   const absPath = path.join(process.cwd(), uploadDir, key);
 
   if (fs.existsSync(absPath)) fs.unlinkSync(absPath);
 }
+
+module.exports = {
+  localUpload,
+  localDelete,
+};
