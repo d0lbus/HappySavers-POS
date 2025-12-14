@@ -30,7 +30,11 @@ function categorizeLogs(logs, tab) {
     const action = String(log.action || "").toUpperCase();
 
     if (tab === "auth") {
-      return action.startsWith("LOGIN") || action.startsWith("LOGOUT") || action.startsWith("AUTH");
+      return (
+        action.startsWith("LOGIN") ||
+        action.startsWith("LOGOUT") ||
+        action.startsWith("AUTH")
+      );
     }
 
     if (tab === "users") {
@@ -41,6 +45,11 @@ function categorizeLogs(logs, tab) {
       return action.startsWith("PRODUCT");
     }
 
+    // ✅ NEW: Promotions
+    if (tab === "promotions") {
+      return action.startsWith("PROMOTION");
+    }
+
     if (tab === "system") {
       return (
         !action.startsWith("LOGIN") &&
@@ -48,7 +57,8 @@ function categorizeLogs(logs, tab) {
         !action.startsWith("AUTH") &&
         !action.startsWith("USER") &&
         !action.startsWith("ROLE") &&
-        !action.startsWith("PRODUCT")
+        !action.startsWith("PRODUCT") &&
+        !action.startsWith("PROMOTION")
       );
     }
 
@@ -89,7 +99,9 @@ export default function AuditLogPage() {
           if (!u) return "System";
           const username = u.username ?? "";
           const name = u.name ?? "";
-          return username && name ? `${username} (${name})` : username || name || "System";
+          return username && name
+            ? `${username} (${name})`
+            : username || name || "System";
         },
       }),
       ch.accessor("action", {
@@ -114,7 +126,7 @@ export default function AuditLogPage() {
         <div>
           <h1 className="text-xl font-semibold text-slate-900">Audit Logs</h1>
           <p className="text-xs text-slate-500">
-            Authentication, user activity, product changes, and system events.
+            Authentication, user activity, product and promotion changes, and system events.
           </p>
         </div>
 
@@ -123,10 +135,7 @@ export default function AuditLogPage() {
             Refresh
           </Button>
 
-          <Button
-            variant="outline"
-            onClick={() => navigate("/admin/users")}
-          >
+          <Button variant="outline" onClick={() => navigate("/admin/users")}>
             Back to Users
           </Button>
         </div>
@@ -141,6 +150,7 @@ export default function AuditLogPage() {
           { label: "Authentication", value: "auth" },
           { label: "User Management", value: "users" },
           { label: "Products", value: "products" },
+          { label: "Promotions", value: "promotions" }, // ✅ NEW
           { label: "System", value: "system" },
         ]}
       />
