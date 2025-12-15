@@ -11,7 +11,7 @@ export const navConfig = {
         {
           label: "Dashboard",
           to: "/admin",
-          icon: "dashboard",
+          icon: "dashboardAlt",
         },
       ],
     },
@@ -20,7 +20,7 @@ export const navConfig = {
       section: "Users",
       items: [
         { label: "All Users", to: "/admin/users", icon: "users" },
-        { label: "Audit Logs", to: "/admin/audit", icon: "audit" },
+        { label: "Audit Logs", to: "/admin/audit", icon: "security" },
       ],
     },
 
@@ -28,15 +28,20 @@ export const navConfig = {
       section: "Products",
       items: [
         { label: "Products", to: "/admin/products", icon: "products" },
-        { label: "Add Product", to: "/admin/products/create", icon: "add" },
-        { label: "Promotions", to: "/admin/products/promotions", icon: "promo" },
+        { label: "Add Product", to: "/admin/products/create", icon: "addAlt" },
+        { label: "Promotions", to: "/admin/products/promotions", icon: "discount" },
+        {
+          label: "New Promotions",
+          to: "/admin/products/promotions/create",
+          icon: "addAlt",
+        },
       ],
     },
 
     {
       section: "Inventory",
       items: [
-        { label: "Inventory", to: "/admin/inventory", icon: "inventory" },
+        { label: "Inventory", to: "/admin/inventory", icon: "stock" },
         { label: "Adjust Stock", to: "/admin/inventory/adjust", icon: "adjust" },
         { label: "Movement Log", to: "/admin/inventory/movement", icon: "movement" },
         { label: "Low Stock", to: "/admin/inventory/low-stock", icon: "lowstock" },
@@ -53,12 +58,12 @@ export const navConfig = {
     {
       section: "Reports",
       items: [
-        { label: "Sales Report", to: "/admin/reports/sales", icon: "report" },
+        { label: "Sales Report", to: "/admin/reports/sales", icon: "performance" },
         { label: "Product Report", to: "/admin/reports/products", icon: "report" },
-        { label: "Category Report", to: "/admin/reports/categories", icon: "report" },
+        { label: "Category Report", to: "/admin/reports/categories", icon: "categories" },
         { label: "Cashier Report", to: "/admin/reports/cashiers", icon: "report" },
         { label: "Shift Performance", to: "/admin/reports/shifts", icon: "shift" },
-        { label: "Promotion Performance", to: "/admin/reports/promotions", icon: "promo" },
+        { label: "Promotion Performance", to: "/admin/reports/promotions", icon: "discount" },
       ],
     },
 
@@ -72,9 +77,7 @@ export const navConfig = {
 
     {
       section: "Shifts",
-      items: [
-        { label: "Shifts", to: "/admin/shifts", icon: "shift" },
-      ],
+      items: [{ label: "Shifts", to: "/admin/shifts", icon: "shift" }],
     },
 
     {
@@ -90,7 +93,7 @@ export const navConfig = {
     {
       section: "Settings",
       items: [
-        { label: "General Settings", to: "/admin/settings", icon: "settings" },
+        { label: "General Settings", to: "/admin/settings", icon: "settingsAlt" },
         { label: "Tax Settings", to: "/admin/settings/tax", icon: "tax" },
         { label: "Receipt Settings", to: "/admin/settings/receipt", icon: "receipt" },
         { label: "Payment Settings", to: "/admin/settings/payment", icon: "payment" },
@@ -104,18 +107,16 @@ export const navConfig = {
   Manager: [
     {
       section: "Dashboard",
-      items: [
-        { label: "Dashboard", to: "/manager", icon: "dashboard" },
-      ],
+      items: [{ label: "Dashboard", to: "/manager", icon: "dashboardAlt" }],
     },
 
     {
       section: "Reports",
       items: [
-        { label: "Sales Report", to: "/manager/reports/sales", icon: "report" },
+        { label: "Sales Report", to: "/manager/reports/sales", icon: "performance" },
         { label: "Product Report", to: "/manager/reports/products", icon: "report" },
         { label: "Cashier Report", to: "/manager/reports/cashiers", icon: "report" },
-        { label: "Category Report", to: "/manager/reports/categories", icon: "report" },
+        { label: "Category Report", to: "/manager/reports/categories", icon: "categories" },
         { label: "Shift Performance", to: "/manager/reports/shifts", icon: "shift" },
       ],
     },
@@ -137,9 +138,7 @@ export const navConfig = {
 
     {
       section: "Shifts",
-      items: [
-        { label: "Shifts", to: "/manager/shifts", icon: "shift" },
-      ],
+      items: [{ label: "Shifts", to: "/manager/shifts", icon: "shift" }],
     },
   ],
 

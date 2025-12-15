@@ -2,7 +2,7 @@
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
-// React Icons
+// React Icons (Feather + others)
 import {
   FiHome,
   FiUsers,
@@ -10,15 +10,6 @@ import {
   FiSettings,
   FiArchive,
   FiBox,
-  FiLayers,
-  FiTrendingUp,
-  FiActivity,
-  FiFileText,
-  FiLogOut,
-  FiShoppingCart,
-  FiList,
-  FiRefreshCw,
-  FiTag,
   FiBarChart2,
   FiAlertTriangle,
   FiRepeat,
@@ -28,46 +19,91 @@ import {
   FiPieChart,
   FiClock,
   FiTrash,
+  FiActivity,
+  FiFileText,
+  FiRefreshCw,
+  FiTag,
+  FiList,
+  FiPackage,          // inventory-ish alternative / stock
+  FiTrendingUp,       // reports/performance
+  FiCreditCard,       // payment settings
+  FiPercent,          // promotions/discount
+  FiShield,           // audit/security-ish
+  FiSliders,          // general settings
+  FiGrid,             // dashboard alt
+  FiShoppingCart,     // POS / sales
+  FiRotateCcw,        // restore-ish
+  FiEdit3,            // edit
+  FiPlusCircle,       // add alt
+  FiSearch,           // search
+  FiLayers,           // categories/structure
 } from "react-icons/fi";
+
 import { HiOutlineReceiptRefund } from "react-icons/hi2";
 import { MdOutlinePointOfSale } from "react-icons/md";
 
 // ----------------------------------------------------
 // ICON MAP — store COMPONENTS, not JSX elements
+// Add keys that match navConfig.js icon strings
 // ----------------------------------------------------
 const ICONS = {
+  // Core
   dashboard: FiHome,
+  dashboardAlt: FiGrid,
+
+  // Users / Audit
   users: FiUsers,
   add: FiUserPlus,
+  addAlt: FiPlusCircle,
   audit: FiActivity,
+  security: FiShield,
 
+  // Products / Promotions
   products: FiBox,
   promo: FiTag,
+  discount: FiPercent,
+  edit: FiEdit3,
 
+  // Inventory
   inventory: FiArchive,
+  stock: FiPackage,
   adjust: FiRepeat,
   movement: FiRefreshCw,
   lowstock: FiAlertTriangle,
 
+  // Transactions / POS
   transactions: FiList,
+  cart: FiShoppingCart,
+  pos: MdOutlinePointOfSale,
 
+  // Reports / Performance
   report: FiBarChart2,
+  performance: FiTrendingUp,
 
+  // Refunds
   refund: HiOutlineReceiptRefund,
   void: FiTrash,
+  restore: FiRotateCcw,
 
+  // Shifts
   shift: FiClock,
-
-  roi: FiPieChart,
-
-  settings: FiSettings,
-  tax: FiDollarSign,
-  receipt: FiFileText,
-  payment: FiDollarSign,
-
-  pos: MdOutlinePointOfSale,
   summary: FiClipboard,
 
+  // ROI
+  roi: FiPieChart,
+
+  // Settings
+  settings: FiSettings,
+  settingsAlt: FiSliders,
+  tax: FiDollarSign,
+  receipt: FiFileText,
+  payment: FiCreditCard,
+
+  // Utilities (if ever used later)
+  search: FiSearch,
+  categories: FiLayers,
+
+  // fallback
   default: FiFolder,
 };
 

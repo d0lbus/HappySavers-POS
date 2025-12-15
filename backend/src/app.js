@@ -16,6 +16,8 @@ const categoriesRoutes = require("./routes/categoriesRoutes");
 const uploadsRoutes = require("./routes/uploadRoutes");
 const promotionsRoutes = require("./routes/promotionRoutes");
 
+const inventoryRoutes = require('./routes/inventoryRoutes');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -43,6 +45,9 @@ app.use("/uploads", uploadsRoutes);
 
 // static uploads
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
+// inventory management routes
+app.use('/inventory', inventoryRoutes);
 
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });

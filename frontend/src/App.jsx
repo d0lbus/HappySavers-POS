@@ -40,6 +40,8 @@ import ProductsPage from "./pages/Admin/Products/ProductsPage";
 import ProductCreatePage from "./pages/Admin/Products/ProductCreatePage";
 import ProductEditPage from "./pages/Admin/Products/ProductEditPage";
 import PromotionsPage from "./pages/Admin/Products/PromotionsPage";
+import PromotionCreatePage from "./pages/Admin/Products/PromotionCreatePage";
+import PromotionEditPage from "./pages/Admin/Products/PromotionEditPage";
 
 // Admin – Inventory
 import InventoryPage from "./pages/Admin/Inventory/InventoryPage";
@@ -147,7 +149,11 @@ function App() {
           <Route path="products" element={<ProductsPage />} />
           <Route path="products/create" element={<ProductCreatePage />} />
           <Route path="products/:id/edit" element={<ProductEditPage />} />
+          
+          {/* Promotions */}
           <Route path="products/promotions" element={<PromotionsPage />} />
+          <Route path="products/promotions/create" element={<PromotionCreatePage />} />
+          <Route path="products/promotions/:id/edit" element={<PromotionEditPage />} />
 
           {/* Inventory */}
           <Route path="inventory" element={<InventoryPage />} />

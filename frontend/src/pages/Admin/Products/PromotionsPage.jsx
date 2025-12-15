@@ -204,7 +204,7 @@ export default function PromotionsPage() {
                 variant="outline"
                 onClick={(e) => {
                   e.stopPropagation();
-                  navigate(`/admin/promotions/${p.id}/edit`);
+                  navigate(`/admin/products/promotions/${p.id}/edit`);
                 }}
               >
                 Edit
@@ -282,7 +282,7 @@ export default function PromotionsPage() {
           </p>
         </div>
 
-        <Button variant="primary" onClick={() => navigate("/admin/promotions/create")}>
+        <Button variant="primary" onClick={() => navigate("/admin/products/promotions/create")}>
           + New Promotion
         </Button>
       </div>
@@ -327,7 +327,7 @@ export default function PromotionsPage() {
           },
           searchValue: search,
         }}
-        onRowClick={(row) => navigate(`/admin/promotions/${row.id}/edit`)}
+        onRowClick={(row) => navigate(`/admin/products/promotions/${row.id}/edit`)}
       />
 
       {/* Pagination */}

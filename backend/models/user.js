@@ -56,5 +56,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
+  User.associate = (models) => {
+    User.hasMany(models.StockMovement, {
+      foreignKey: 'created_by',
+      as: 'stockActions',
+    });
+  };
+
   return User;
 };
