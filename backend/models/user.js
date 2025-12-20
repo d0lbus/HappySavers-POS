@@ -5,7 +5,14 @@ const bcrypt = require('bcrypt');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
+      // User -> Role
       User.belongsTo(models.Role, { foreignKey: 'roleId', as: 'role' });
+
+      // User -> StockMovement
+      User.hasMany(models.StockMovement, {
+        foreignKey: 'created_by',
+        as: 'stockActions',
+      });
     }
 
     async validatePassword(password) {
@@ -45,23 +52,24 @@ module.exports = (sequelize, DataTypes) => {
           }
         },
         beforeUpdate: async (user) => {
-          if (user.changed('passwordHash') && user.passwordHash && !user.passwordHash.startsWith('$2b$')) {
+          if (
+            user.changed('passwordHash') &&
+            user.passwordHash &&
+            !user.passwordHash.startsWith('$2b$')
+          ) {
             user.passwordHash = await bcrypt.hash(user.passwordHash, 10);
           }
-          if (user.changed('pinPassword') && user.pinPassword && !user.pinPassword.startsWith('$2b$')) {
+          if (
+            user.changed('pinPassword') &&
+            user.pinPassword &&
+            !user.pinPassword.startsWith('$2b$')
+          ) {
             user.pinPassword = await bcrypt.hash(user.pinPassword, 10);
           }
         },
       },
     }
   );
-
-  User.associate = (models) => {
-    User.hasMany(models.StockMovement, {
-      foreignKey: 'created_by',
-      as: 'stockActions',
-    });
-  };
 
   return User;
 };
